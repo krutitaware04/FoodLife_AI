@@ -1,0 +1,142 @@
+
+<div class="form-page">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">FOOD MANAGEMENT</p>
+      <h1>Add Food Item</h1>
+      <p class="subtitle">Add a food item to your inventory.</p>
+    </div>
+
+    <button type="button" class="back-button" (click)="cancel()">
+      Back to Inventory
+    </button>
+  </div>
+
+  <form class="food-form" #foodForm="ngForm" (ngSubmit)="saveFood()">
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="foodName">Food Name *</label>
+        <input
+          id="foodName"
+          name="food_name"
+          [(ngModel)]="food.food_name"
+          placeholder="e.g. Milk"
+          required
+          maxlength="150">
+      </div>
+
+      <div class="form-field">
+        <label for="category">Category</label>
+        <select id="category" name="category" [(ngModel)]="food.category">
+          <option value="">Select category</option>
+          <option value="Dairy">Dairy</option>
+          <option value="Fruits">Fruits</option>
+          <option value="Vegetables">Vegetables</option>
+          <option value="Grains">Grains</option>
+          <option value="Meat">Meat</option>
+          <option value="Beverages">Beverages</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="purchaseType">Purchase Type *</label>
+        <select
+          id="purchaseType"
+          name="purchase_type"
+          [(ngModel)]="food.purchase_type"
+          required>
+          <option value="Online">Online</option>
+          <option value="Offline">Offline</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="purchaseDate">Purchase Date *</label>
+        <input
+          id="purchaseDate"
+          type="date"
+          name="purchase_date"
+          [(ngModel)]="food.purchase_date"
+          required>
+      </div>
+
+      <div class="form-field">
+        <label for="expiryDate">Expiry Date</label>
+        <input
+          id="expiryDate"
+          type="date"
+          name="expiry_date"
+          [(ngModel)]="food.expiry_date">
+      </div>
+
+      <div class="form-field">
+        <label for="shelfLife">Estimated Shelf Life (days)</label>
+        <input
+          id="shelfLife"
+          type="number"
+          name="estimated_shelf_life_days"
+          [(ngModel)]="food.estimated_shelf_life_days"
+          min="0"
+          placeholder="e.g. 7">
+      </div>
+
+      <div class="form-field">
+        <label for="quantity">Quantity *</label>
+        <input
+          id="quantity"
+          type="number"
+          name="quantity"
+          [(ngModel)]="food.quantity"
+          min="0.01"
+          step="0.01"
+          required>
+      </div>
+
+      <div class="form-field">
+        <label for="unit">Unit *</label>
+        <select id="unit" name="unit" [(ngModel)]="food.unit" required>
+          <option value="pieces">Pieces</option>
+          <option value="kg">Kilograms (kg)</option>
+          <option value="g">Grams (g)</option>
+          <option value="litre">Litres</option>
+          <option value="ml">Millilitres (ml)</option>
+          <option value="packets">Packets</option>
+          <option value="cups">Cups</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="storage">Storage Location</label>
+        <select
+          id="storage"
+          name="storage_location"
+          [(ngModel)]="food.storage_location">
+          <option value="Fridge">Fridge</option>
+          <option value="Freezer">Freezer</option>
+          <option value="Pantry">Pantry</option>
+          <option value="Room Temperature">Room Temperature</option>
+        </select>
+      </div>
+    </div>
+
+    <div *ngIf="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="cancel-button" (click)="cancel()">
+        Cancel
+      </button>
+
+      <button type="submit" class="save-button"
+        [disabled]="isSaving || foodForm.invalid">
+        {{ isSaving ? 'Saving...' : 'Save Food Item' }}
+      </button>
+    </div>
+  </form>
+</div>

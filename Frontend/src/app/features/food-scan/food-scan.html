@@ -1,0 +1,352 @@
+
+<div class="food-scan-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">FOODLIFE AI / SMART SCANNING</p>
+      <h1>Scan Your Food</h1>
+      <p class="subtitle">
+        Identify food, review its details, and add it to your inventory.
+      </p>
+    </div>
+    <a routerLink="/inventory" class="back-link">View inventory →</a>
+  </header>
+
+  <div class="workflow">
+    <div class="workflow-step active">
+      <span>01</span>
+      <div><strong>Upload</strong><small>Choose a food image</small></div>
+    </div>
+    <div class="workflow-line"></div>
+    <div class="workflow-step" [class.active]="scanResult?.success">
+      <span>02</span>
+      <div><strong>Identify</strong><small>Review AI prediction</small></div>
+    </div>
+    <div class="workflow-line"></div>
+    <div class="workflow-step" [class.active]="confirmedPrediction">
+      <span>03</span>
+      <div><strong>Save</strong><small>Add to inventory</small></div>
+    </div>
+  </div>
+
+  <div class="alert error-alert" *ngIf="errorMessage" role="alert">
+    <span>!</span>
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <div class="alert success-alert" *ngIf="successMessage" role="status">
+    <span>✓</span>
+    <div>
+      <strong>Food saved successfully</strong>
+      <p>{{ successMessage }}</p>
+      <a routerLink="/inventory">Go to inventory →</a>
+    </div>
+  </div>
+
+  <div class="scan-layout">
+    <section class="panel image-panel">
+      <div class="section-heading">
+        <div>
+          <span class="section-label">STEP 01</span>
+          <h2>Food image</h2>
+          <p>Upload a clear photo of one food item.</p>
+        </div>
+        <span class="heading-icon">✦</span>
+      </div>
+
+      <label
+        class="upload-zone"
+        for="foodImage"
+        *ngIf="!imagePreview"
+      >
+        <span class="upload-symbol">↑</span>
+        <strong>Drop your image here</strong>
+        <span>or <u>browse files</u></span>
+        <small>Image files up to 10 MB</small>
+      </label>
+
+      <input
+        id="foodImage"
+        type="file"
+        accept="image/*"
+        (change)="onImageSelected($event)"
+        hidden
+      />
+
+      <div class="image-preview" *ngIf="imagePreview">
+        <img [src]="imagePreview" alt="Selected food image" />
+        <div class="preview-footer">
+          <div class="file-details">
+            <span class="file-icon">IMG</span>
+            <div>
+              <strong>{{ selectedFile?.name }}</strong>
+              <small>
+                {{ ((selectedFile?.size || 0) / 1024).toFixed(1) }} KB
+              </small>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="icon-button"
+            aria-label="Remove image"
+            (click)="removeImage()"
+          >×</button>
+        </div>
+      </div>
+
+      <div class="image-actions">
+        <button
+          type="button"
+          class="button button-primary full-width"
+          (click)="scanFood()"
+          [disabled]="!selectedFile || isScanning"
+        >
+          <span *ngIf="!isScanning">✦ &nbsp; Identify food with AI</span>
+          <span *ngIf="isScanning" class="loading-label">
+            <span class="spinner"></span> Analysing image...
+          </span>
+        </button>
+        <p class="helper-text">
+          Supported classes include tomatoes, bananas, spinach, milk, curd,
+          rice, apples and bread.
+        </p>
+      </div>
+
+      <div class="tip-card">
+        <span>ⓘ</span>
+        <p>
+          For better results, use a well-lit photo with the food clearly visible.
+        </p>
+      </div>
+    </section>
+
+    <section class="panel details-panel">
+      <div class="section-heading">
+        <div>
+          <span class="section-label">STEP 02</span>
+          <h2>Food details</h2>
+          <p>Review the prediction and confirm the information.</p>
+        </div>
+        <span class="heading-icon">⌘</span>
+      </div>
+
+      <div class="empty-state" *ngIf="!scanResult && !scanAttempted">
+        <div class="empty-illustration">⌕</div>
+        <h3>Your results will appear here</h3>
+        <p>Upload a food image and select Identify food with AI.</p>
+      </div>
+
+      <div class="classification-card" *ngIf="scanResult?.success">
+        <div class="classification-top">
+          <div>
+            <span class="result-label">AI PREDICTION</span>
+            <h3>{{ scanResult?.predicted_food }}</h3>
+            <span class="category-chip">{{ scanResult?.category }}</span>
+          </div>
+          <div class="confidence-ring">
+            <strong>{{ ((scanResult?.confidence || 0) * 100).toFixed(1) }}%</strong>
+            <small>Confidence</small>
+          </div>
+        </div>
+
+        <div
+          class="confidence-note"
+          [class.confidence-low]="!scanResult?.is_high_confidence"
+        >
+          <strong>
+            {{ scanResult?.is_high_confidence ? 'Higher-confidence prediction' : 'Prediction needs careful review' }}
+          </strong>
+          <p>
+            {{ scanResult?.is_high_confidence
+              ? 'Please verify that the identified food is correct.'
+              : 'The prediction is uncertain. Correct the details below if needed.' }}
+          </p>
+        </div>
+
+        <div class="prediction-metrics">
+          <div>
+            <span>Suggested shelf life</span>
+            <strong>{{ scanResult?.suggested_shelf_life_days }} days</strong>
+          </div>
+          <div>
+            <span>Suggested storage</span>
+            <strong>{{ scanResult?.suggested_storage }}</strong>
+          </div>
+        </div>
+
+        <div class="probability-list" *ngIf="scanResult?.all_probabilities as probabilities">
+          <h4>Other possible classifications</h4>
+          <div class="probability-row" *ngFor="let item of (probabilities | keyvalue)">
+            <span>{{ item.key }}</span>
+            <div class="probability-track">
+              <span [style.width.%]="(+item.value) * 100"></span>
+            </div>
+            <strong>{{ ((+item.value) * 100).toFixed(1) }}%</strong>
+          </div>
+        </div>
+      </div>
+
+      <form class="food-form" (ngSubmit)="saveToInventory()">
+        <div class="form-title">
+          <h3>Confirm food information</h3>
+          <span class="required-note">* Required</span>
+        </div>
+
+        <div class="form-group">
+          <label for="foodName">Food name *</label>
+          <input
+            id="foodName"
+            name="foodName"
+            type="text"
+            [(ngModel)]="foodName"
+            placeholder="e.g. Fresh tomatoes"
+            required
+            maxlength="150"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="category">Category *</label>
+            <select id="category" name="category" [(ngModel)]="category" required>
+              <option *ngFor="let item of categories" [value]="item">{{ item }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="storage">Suggested storage</label>
+            <input
+              id="storage"
+              type="text"
+              [value]="scanResult?.suggested_storage || 'Enter manually if needed'"
+              readonly
+            />
+          </div>
+        </div>
+
+        <div class="form-row quantity-row">
+          <div class="form-group">
+            <label for="quantity">Quantity *</label>
+            <input
+              id="quantity"
+              name="quantity"
+              type="number"
+              min="0.01"
+              step="0.01"
+              [(ngModel)]="quantity"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="unit">Unit *</label>
+            <select id="unit" name="unit" [(ngModel)]="unit" required>
+              <option *ngFor="let value of units" [value]="value">{{ value }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="unitPrice">Price per unit (₹) *</label>
+            <input
+              id="unitPrice"
+              name="unitPrice"
+              type="number"
+              min="0"
+              step="0.01"
+              [(ngModel)]="unitPrice"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="purchaseDate">Purchase date *</label>
+            <input
+              id="purchaseDate"
+              name="purchaseDate"
+              type="date"
+              [(ngModel)]="purchaseDate"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="expiryDate">Expiry date *</label>
+            <input
+              id="expiryDate"
+              name="expiryDate"
+              type="date"
+              [(ngModel)]="expiryDate"
+              [min]="purchaseDate"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="supplier">Supplier / store</label>
+          <input
+            id="supplier"
+            name="supplier"
+            type="text"
+            [(ngModel)]="supplier"
+            placeholder="Local supermarket"
+            maxlength="150"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="notes">Notes</label>
+          <textarea
+            id="notes"
+            name="notes"
+            [(ngModel)]="notes"
+            rows="3"
+            placeholder="Optional details about the food"
+          ></textarea>
+        </div>
+
+        <div class="confirmation-box" *ngIf="scanResult?.success">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              [checked]="confirmedPrediction"
+              (change)="confirmedPrediction = $any($event.target).checked"
+            />
+            <span>I have checked and confirmed the food details.</span>
+          </label>
+        </div>
+
+        <div class="confirmation-box" *ngIf="!scanResult?.success">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              [checked]="confirmedPrediction"
+              (change)="confirmedPrediction = $any($event.target).checked"
+            />
+            <span>I entered the food details manually and checked them.</span>
+          </label>
+        </div>
+
+        <div class="form-footer">
+          <button type="button" class="button button-secondary" (click)="removeImage()">
+            Clear
+          </button>
+          <button
+            type="submit"
+            class="button button-primary"
+            [disabled]="isSaving || !confirmedPrediction || !selectedFile"
+          >
+            <span *ngIf="!isSaving">Save to inventory →</span>
+            <span *ngIf="isSaving">Saving...</span>
+          </button>
+        </div>
+      </form>
+
+      <div class="safety-note">
+        <strong>Food safety note</strong>
+        <p>
+          This AI prediction uses visual features only. It does not determine
+          whether food is fresh, spoiled, or safe to eat. Check packaging,
+          expiry labels, storage conditions, and the food itself.
+        </p>
+      </div>
+    </section>
+  </div>
+</div>

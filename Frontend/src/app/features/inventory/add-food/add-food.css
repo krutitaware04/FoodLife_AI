@@ -1,0 +1,160 @@
+
+:host {
+  display: block;
+  color: #24352d;
+}
+
+.form-page {
+  min-height: 100%;
+  padding: 28px;
+  background: #f7f9f7;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+.eyebrow {
+  color: #43835c;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  margin: 0 0 8px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 30px;
+}
+
+.subtitle {
+  color: #78847d;
+  margin-top: 9px;
+  font-size: 14px;
+}
+
+.back-button,
+.cancel-button,
+.save-button {
+  border-radius: 9px;
+  padding: 12px 17px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.back-button,
+.cancel-button {
+  background: white;
+  border: 1px solid #dce6dd;
+  color: #326747;
+}
+
+.food-form {
+  background: white;
+  border: 1px solid #e7ece8;
+  border-radius: 14px;
+  padding: 28px;
+  max-width: 1000px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 23px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.form-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #35493c;
+}
+
+.form-field input,
+.form-field select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #dce4de;
+  border-radius: 8px;
+  padding: 12px;
+  background: white;
+  color: #24352d;
+  font: inherit;
+  font-size: 14px;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  outline: 2px solid #c5e4ce;
+  border-color: #43835c;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid #edf0ed;
+  margin-top: 28px;
+  padding-top: 22px;
+}
+
+.save-button {
+  border: none;
+  background: #34764b;
+  color: white;
+}
+
+.save-button:hover:not(:disabled) {
+  background: #285f3b;
+}
+
+.save-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.success-message,
+.error-message {
+  margin-top: 20px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.success-message {
+  background: #e9f5ec;
+  color: #28663b;
+}
+
+.error-message {
+  background: #fdebea;
+  color: #b42318;
+}
+
+@media (max-width: 650px) {
+  .form-page {
+    padding: 16px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .food-form {
+    padding: 18px;
+  }
+}

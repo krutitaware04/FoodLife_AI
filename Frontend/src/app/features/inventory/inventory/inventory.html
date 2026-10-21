@@ -1,0 +1,105 @@
+<div class="inventory-page">
+
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">FOOD MANAGEMENT</p>
+            <h1>Food Inventory</h1>
+            <p class="subtitle">Manage your food items, expiry dates and waste risk.</p>
+        </div>
+
+        <div class="header-actions">
+            <button class="add-button" (click)="goToAddFood()">+ Add Food Item</button>
+        </div>
+    </div>
+
+
+    <div class="summary-card">
+        <div class="summary-icon">🥗</div>
+        <div>
+            <p>Total Food Items</p>
+            <h2>{{ total }}</h2>
+        </div>
+    </div>
+
+    <div *ngIf="isLoading" class="message">
+        Loading your inventory...
+    </div>
+
+    <div *ngIf="errorMessage" class="message error-message">
+        {{ errorMessage }}
+        <button (click)="loadInventory()">Try again</button>
+    </div>
+
+    <div class="table-card" *ngIf="!isLoading && !errorMessage">
+        <div class="table-header">
+            <div>
+                <h2>Your Food Items</h2>
+                <p>Food records retrieved from your inventory API</p>
+            </div>
+            <span class="item-count">{{ items.length }} items</span>
+        </div>
+
+        <div class="table-wrapper" *ngIf="items.length > 0; else emptyInventory">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Food Item</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Purchase Type</th>
+                        <th>Expiry Date</th>
+                        <th>Waste Risk</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let item of items">
+                        <td>
+                            <div class="food-name">{{ item.food_name }}</div>
+                            <!-- <div class="food-id">ID: {{ item.food_item_id }}</div> -->
+                        </td>
+
+                        <td>{{ item.category || 'Uncategorized' }}</td>
+
+                        <td>{{ item.quantity }} {{ item.unit }}</td>
+
+                        <td>
+                            <span class="purchase-badge">
+                                {{ item.purchase_type }}
+                            </span>
+                        </td>
+
+                        <td>
+                            {{ item.expiry_date ? (item.expiry_date | date:'dd MMM yyyy') : 'Not set' }}
+                        </td>
+
+                        <td>
+                            <span class="risk-badge" [ngClass]="{
+                  'risk-high': (item.waste_risk_score ?? 0) >= 70,
+                  'risk-medium': (item.waste_risk_score ?? 0) >= 40 && (item.waste_risk_score ?? 0) < 70,
+                  'risk-low': (item.waste_risk_score ?? 0) < 40
+                }">
+                                {{ item.waste_risk_score !== null && item.waste_risk_score !== undefined
+                                ? item.waste_risk_score + '%'
+                                : 'Not assessed' }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="status-badge">{{ item.food_status }}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <ng-template #emptyInventory>
+            <div class="empty-state">
+                <div class="empty-icon">🍎</div>
+                <h3>Your inventory is empty</h3>
+                <p>Add your first food item to start tracking expiry dates and waste risk.</p>
+            </div>
+        </ng-template>
+    </div>
+</div>

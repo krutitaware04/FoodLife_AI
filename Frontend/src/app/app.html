@@ -1,0 +1,48 @@
+
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-icon">F</span>
+      <div>
+        <h2>FoodLife AI</h2>
+        <p>Smart Food Management</p>
+      </div>
+    </div>
+
+    <nav class="navigation">
+      <a routerLink="/dashboard" routerLinkActive="active">
+        <span>▦</span> Dashboard
+      </a>
+      <a routerLink="/inventory" routerLinkActive="active">
+        <span>▤</span> My Inventory
+      </a>
+      <a routerLink="/food-scan" routerLinkActive="active">
+        <span>⌕</span> Food Scan
+      </a>
+      <a routerLink="/consume-first" routerLinkActive="active">
+        <span>◷</span> Consume First
+      </a>
+      <a routerLink="/recipes" routerLinkActive="active">
+        <span>♨</span> Recipes
+      </a>
+      <a routerLink="/shopping-list" routerLinkActive="active">
+        <span>☷</span> Shopping List
+      </a>
+      <a routerLink="/consumption" routerLinkActive="active">
+        <span>↗</span> Consumption
+      </a>
+      <a routerLink="/reports" routerLinkActive="active">
+        <span>▥</span> Reports
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <p>Reduce waste. Eat smarter.</p>
+      <small>FoodLife AI · Personal food assistant</small>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

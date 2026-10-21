@@ -1,0 +1,179 @@
+<div class="dashboard-layout">
+    <!-- Sidebar -->
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">YOUR FOOD, SMARTER</p>
+                <h1>Dashboard</h1>
+                <p class="subtitle">
+                    Track your food, prevent waste, and plan what to eat next.
+                </p>
+            </div>
+
+            <div class="profile">
+                <div class="avatar">U</div>
+                <div>
+                    <strong>My Account</strong>
+                    <small>FoodLife User</small>
+                </div>
+            </div>
+        </header>
+
+        <!-- Welcome Section -->
+        <section class="welcome-panel">
+            <div>
+                <p class="welcome-label">WELCOME TO FOODLIFE AI</p>
+                <h2>Make every ingredient count.</h2>
+                <p>
+                    Keep track of freshness and make better decisions about your food.
+                </p>
+            </div>
+
+            <div class="welcome-symbol">♧</div>
+        </section>
+
+        <!-- Dashboard Summary -->
+        <section class="section-heading">
+            <div>
+                <h2>Your food overview</h2>
+                <p>Summary from your personal inventory</p>
+            </div>
+        </section>
+
+        <section class="stats-grid">
+            <!-- Total Food Items -->
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span>Total food items</span>
+                    <span class="stat-icon green">▤</span>
+                </div>
+
+                <h3>
+                    @if (isLoading) {
+                        <span>...</span>
+                    } @else if (summary) {
+                        {{ summary.total_food_items }}
+                    } @else {
+                        <span>—</span>
+                    }
+                </h3>
+
+                <p>Items in your inventory</p>
+            </article>
+
+            <!-- Expiring Soon -->
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span>Expiring soon</span>
+                    <span class="stat-icon orange">◷</span>
+                </div>
+
+                <h3>
+                    @if (isLoading) {
+                        <span>...</span>
+                    } @else if (summary) {
+                        {{ summary.expiring_soon }}
+                    } @else {
+                        <span>—</span>
+                    }
+                </h3>
+
+                <p>Items needing attention</p>
+            </article>
+
+            <!-- High Waste Risk -->
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span>High waste risk</span>
+                    <span class="stat-icon red">!</span>
+                </div>
+
+                <h3>
+                    @if (isLoading) {
+                        <span>...</span>
+                    } @else if (summary) {
+                        {{ summary.high_waste_risk }}
+                    } @else {
+                        <span>—</span>
+                    }
+                </h3>
+
+                <p>Items at higher risk</p>
+            </article>
+
+            <!-- Food Consumed -->
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span>Food consumed</span>
+                    <span class="stat-icon blue">✓</span>
+                </div>
+
+                <h3>
+                    @if (isLoading) {
+                        <span>...</span>
+                    } @else if (summary) {
+                        {{ summary.consumed_this_month }}
+                    } @else {
+                        <span>—</span>
+                    }
+                </h3>
+
+                <p>Consumption this month</p>
+            </article>
+        </section>
+
+        <!-- API Error Message -->
+        @if (errorMessage) {
+            <div class="error-message" role="alert">
+                {{ errorMessage }}
+            </div>
+        }
+
+        <!-- Additional Dashboard Sections -->
+        <section class="content-grid">
+            <!-- Expiring Items -->
+            <article class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Expiring soon</h2>
+                        <p>Food that may need your attention</p>
+                    </div>
+
+                    <a routerLink="/inventory">View inventory →</a>
+                </div>
+
+                <div class="empty-state">
+                    <span class="empty-icon">◷</span>
+                    <h3>Expiry information will appear here</h3>
+                    <p>
+                        Your expiring food items will be displayed here.
+                    </p>
+                </div>
+            </article>
+
+            <!-- Consume First -->
+            <article class="panel consume-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Consume First</h2>
+                        <p>Prioritise food that needs attention</p>
+                    </div>
+                </div>
+
+                <div class="empty-state">
+                    <span class="empty-icon">♧</span>
+                    <h3>Your recommendations</h3>
+                    <p>
+                        Recommendations will come from the FoodLife AI API.
+                    </p>
+                </div>
+            </article>
+        </section>
+
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            FoodLife AI · Smarter choices for less food waste
+        </footer>
+    </main>
+</div>
